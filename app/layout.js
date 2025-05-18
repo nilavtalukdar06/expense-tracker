@@ -1,4 +1,5 @@
 import { Outfit } from "next/font/google";
+import AuthProvider from "@/utils/AuthProvider";
 import "./globals.css";
 
 const outfit = Outfit({
@@ -14,7 +15,9 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body className={`${outfit.className} antialiased`}>
-        <main>{children}</main>
+        <AuthProvider>
+          <main>{children}</main>
+        </AuthProvider>
       </body>
     </html>
   );
