@@ -1,16 +1,9 @@
-"use client";
-import { Button } from "@/components/ui/button";
-import supabase from "@/supabase/supabase";
+import Navbar from "./navbar";
 
 export default function Home() {
   return (
-    <section className="p-4">
-      <Button
-        variant="outline"
-        onClick={async () => await supabase.auth.signOut()}
-      >
-        Log Out
-      </Button>
+    <section>
+      <Navbar />
       <h1 className="my-2">Expensify</h1>
     </section>
   );
