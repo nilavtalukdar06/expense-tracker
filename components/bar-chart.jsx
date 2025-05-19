@@ -18,36 +18,46 @@ import {
 } from "@/components/ui/chart";
 
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "hsl(173, 58%, 39%)" },
-  { browser: "safari", visitors: 200, fill: "hsl(12, 76%, 61%)" },
-  { browser: "firefox", visitors: 187, fill: "hsl(197, 37%, 24%)" },
-  { browser: "edge", visitors: 173, fill: "hsl(43, 74%, 66%)" },
-  { browser: "other", visitors: 90, fill: "hsl(27, 87%, 67%)" },
+  { category: "food", amount: 275, fill: "hsl(173, 58%, 39%)" },
+  { category: "transportation", amount: 200, fill: "hsl(12, 76%, 61%)" },
+  { category: "housing", amount: 187, fill: "hsl(197, 37%, 24%)" },
+  { category: "entertainment", amount: 173, fill: "hsl(43, 74%, 66%)" },
+  { category: "shopping", amount: 90, fill: "hsl(27, 87%, 67%)" },
+  { category: "health", amount: 90, fill: "hsl(173, 58%, 39%)" },
+  { category: "other", amount: 90, fill: "hsl(43, 74%, 66%)" },
 ];
 
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  amount: {
+    label: "Amount",
   },
-  chrome: {
-    label: "Chrome",
+  food: {
+    label: "Food",
     color: "hsl(173, 58%, 39%)",
   },
-  safari: {
-    label: "Safari",
+  transportation: {
+    label: "Transport",
     color: "hsl(12, 76%, 61%)",
   },
-  firefox: {
-    label: "Firefox",
+  housing: {
+    label: "Housing",
     color: "hsl(197, 37%, 24%)",
   },
-  edge: {
-    label: "Edge",
+  entertainment: {
+    label: "Movies",
     color: "hsl(43, 74%, 66%)",
+  },
+  shopping: {
+    label: "Shopping",
+    color: "hsl(27, 87%, 67%)",
+  },
+  health: {
+    label: "Health",
+    color: "hsl(173, 58%, 39%)",
   },
   other: {
     label: "Other",
-    color: "hsl(27, 87%, 67%)",
+    color: "hsl(43, 74%, 66%)",
   },
 };
 
@@ -69,20 +79,20 @@ export default function BarChartComponent() {
             }}
           >
             <XAxis
-              dataKey="browser"
+              dataKey="category"
               type="category"
               tickLine={false}
               tickMargin={10}
               axisLine={false}
               tickFormatter={(value) => chartConfig[value]?.label}
             />
-            <YAxis dataKey="visitors" type="number" hide />
+            <YAxis dataKey="amount" type="number" hide />
             <ChartTooltip
-              cursor={false}
+              cursor={true}
               content={<ChartTooltipContent hideLabel />}
             />
             <Bar
-              dataKey="visitors"
+              dataKey="amount"
               layout="vertical"
               radius={5}
               fill={({ payload }) => payload.fill}

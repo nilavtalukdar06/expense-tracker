@@ -19,42 +19,51 @@ import {
 } from "@/components/ui/chart";
 
 const chartData = [
-  { browser: "chrome", visitors: 275, fill: "hsl(12, 76%, 61%)" },
-  { browser: "safari", visitors: 200, fill: "hsl(173, 58%, 39%)" },
-  { browser: "firefox", visitors: 287, fill: "hsl(197, 37%, 24%)" },
-  { browser: "edge", visitors: 173, fill: "hsl(43, 74%, 66%)" },
-  { browser: "other", visitors: 190, fill: "hsl(27, 87%, 67%)" },
+  { category: "food", amount: 275, fill: "hsl(173, 58%, 39%)" },
+  { category: "transportation", amount: 200, fill: "hsl(12, 76%, 61%)" },
+  { category: "housing", amount: 187, fill: "hsl(197, 37%, 24%)" },
+  { category: "entertainment", amount: 173, fill: "hsl(43, 74%, 66%)" },
+  { category: "shopping", amount: 90, fill: "hsl(27, 87%, 67%)" },
+  { category: "health", amount: 90, fill: "hsl(173, 58%, 39%)" },
+  { category: "other", amount: 90, fill: "hsl(43, 74%, 66%)" },
 ];
-
 const chartConfig = {
-  visitors: {
-    label: "Visitors",
+  amount: {
+    label: "Amount",
   },
-  chrome: {
-    label: "Chrome",
-    color: "hsl(12, 76%, 61%)",
-  },
-  safari: {
-    label: "Safari",
+  food: {
+    label: "Food",
     color: "hsl(173, 58%, 39%)",
   },
-  firefox: {
-    label: "Firefox",
+  transportation: {
+    label: "Transport",
+    color: "hsl(12, 76%, 61%)",
+  },
+  housing: {
+    label: "Housing",
     color: "hsl(197, 37%, 24%)",
   },
-  edge: {
-    label: "Edge",
+  entertainment: {
+    label: "Movies",
     color: "hsl(43, 74%, 66%)",
+  },
+  shopping: {
+    label: "Shopping",
+    color: "hsl(27, 87%, 67%)",
+  },
+  health: {
+    label: "Health",
+    color: "hsl(173, 58%, 39%)",
   },
   other: {
     label: "Other",
-    color: "hsl(27, 87%, 67%)",
+    color: "hsl(43, 74%, 66%)",
   },
 };
 
 export function PieChartComponent() {
   const totalVisitors = React.useMemo(() => {
-    return chartData.reduce((acc, curr) => acc + curr.visitors, 0);
+    return chartData.reduce((acc, curr) => acc + curr.amount, 0);
   }, []);
 
   return (
@@ -70,13 +79,13 @@ export function PieChartComponent() {
         >
           <PieChart>
             <ChartTooltip
-              cursor={false}
+              cursor={true}
               content={<ChartTooltipContent hideLabel />}
             />
             <Pie
               data={chartData}
-              dataKey="visitors"
-              nameKey="browser"
+              dataKey="amount"
+              nameKey="category"
               innerRadius={60}
               strokeWidth={5}
             >
@@ -102,7 +111,7 @@ export function PieChartComponent() {
                           y={(viewBox.cy || 0) + 24}
                           className="fill-muted-foreground"
                         >
-                          Visitors
+                          Amount
                         </tspan>
                       </text>
                     );

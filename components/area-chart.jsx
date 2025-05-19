@@ -1,7 +1,6 @@
 "use client";
-
 import { TrendingUp } from "lucide-react";
-import { Area, AreaChart, CartesianGrid, XAxis } from "recharts";
+import { Area, AreaChart, CartesianGrid, XAxis, Tooltip } from "recharts";
 
 import {
   Card,
@@ -11,24 +10,20 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import {
-  ChartConfig,
-  ChartContainer,
-  ChartTooltip,
-  ChartTooltipContent,
-} from "@/components/ui/chart";
+import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
 const chartData = [
-  { month: "January", desktop: 186 },
-  { month: "February", desktop: 305 },
-  { month: "March", desktop: 237 },
-  { month: "April", desktop: 73 },
-  { month: "May", desktop: 209 },
-  { month: "June", desktop: 214 },
+  { category: "Food", amount: 186 },
+  { category: "Transportation", amount: 305 },
+  { category: "Housing", amount: 237 },
+  { category: "Entertainment", amount: 73 },
+  { category: "Shopping", amount: 209 },
+  { category: "Health", amount: 214 },
+  { category: "Other", amount: 214 },
 ];
 
 const chartConfig = {
-  desktop: {
-    label: "Desktop",
+  amount: {
+    label: "Amount",
     color: "hsl(173, 58%, 39%)",
   },
 };
@@ -45,30 +40,29 @@ export default function AreaChartComponent() {
       <CardContent>
         <ChartContainer config={chartConfig}>
           <AreaChart
-            accessibilityLayer
             data={chartData}
             margin={{
-              left: 12,
-              right: 12,
+              left: 10,
+              right: 10,
             }}
           >
-            <CartesianGrid vertical={false} />
+            <CartesianGrid vertical={true} />
             <XAxis
-              dataKey="month"
-              tickLine={false}
-              axisLine={false}
-              tickMargin={8}
-              tickFormatter={(value) => value.slice(0, 3)}
+              dataKey="category"
+              tickLine={true}
+              axisLine={true}
+              tick={false}
+              tickMargin={14}
             />
-            <ChartTooltip
-              cursor={false}
+            <Tooltip
+              cursor={true}
               content={<ChartTooltipContent indicator="line" />}
             />
             <Area
-              dataKey="desktop"
+              dataKey="amount"
               type="natural"
-              fill="hsl(173, 58%, 39%)"
-              fillOpacity={0.4}
+              fill="#3fcf8e"
+              fillOpacity={0.6}
               stroke="hsl(173, 58%, 39%)"
             />
           </AreaChart>
