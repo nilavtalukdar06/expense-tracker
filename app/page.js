@@ -1,5 +1,6 @@
 import AddExpense from "@/components/add-expense";
 import Navbar from "./navbar";
+import Footer from "@/components/footer";
 
 export default function Home() {
   return (
@@ -14,6 +15,7 @@ export default function Home() {
         </p>
         <AddExpense />
       </div>
+      <Footer />
     </section>
   );
 }
