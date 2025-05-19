@@ -72,8 +72,12 @@ export default function Navbar() {
           <MenuIcon size={18} />
         </DropdownMenuTrigger>
         <DropdownMenuContent>
-          <DropdownMenuItem>Add Expense</DropdownMenuItem>
-          <DropdownMenuItem>Expenses</DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/">Add Expense</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/expenses">Expenses</Link>
+          </DropdownMenuItem>
           <DropdownMenuItem>
             <Button
               className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]"
