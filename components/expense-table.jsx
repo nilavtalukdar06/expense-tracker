@@ -24,6 +24,17 @@ import {
   DialogTitle,
   DialogTrigger,
 } from "@/components/ui/dialog";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function ExpenseTable() {
   const session = useContext(SessionContext);
@@ -52,6 +63,22 @@ export default function ExpenseTable() {
     }
   };
 
+  const deleteExpense = async (expense_id) => {
+    try {
+      const { error } = await supabase
+        .from("expenses")
+        .delete()
+        .eq("id", expense_id);
+      if (error) {
+        throw new Error(error.message);
+      }
+      setExpenses(expenses.filter((expense) => expense.id !== expense_id));
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to delete expense");
+    }
+  };
+
   useEffect(() => {
     session?.user?.id && fetchExpenses();
   }, []);
@@ -76,7 +103,7 @@ export default function ExpenseTable() {
           </TableHeader>
           <TableBody>
             {expenses.map((expense, index) => (
-              <TableRow key={expense.id}>
+              <TableRow key={index}>
                 <TableCell className="font-medium">{index + 1}</TableCell>
                 <TableCell>{expense.amount}</TableCell>
                 <TableCell>{expense.category}</TableCell>
@@ -98,7 +125,31 @@ export default function ExpenseTable() {
                   </Dialog>
                 </TableCell>
                 <TableCell className="text-right">
-                  <Button variant="destructive">Delete</Button>
+                  <AlertDialog>
+                    <AlertDialogTrigger asChild>
+                      <Button variant="destructive">Delete</Button>
+                    </AlertDialogTrigger>
+                    <AlertDialogContent>
+                      <AlertDialogHeader>
+                        <AlertDialogTitle>
+                          Are you absolutely sure?
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                          This action cannot be undone. This will permanently
+                          delete your expense and remove it from our servers.
+                        </AlertDialogDescription>
+                      </AlertDialogHeader>
+                      <AlertDialogFooter>
+                        <AlertDialogCancel>Cancel</AlertDialogCancel>
+                        <AlertDialogAction
+                          className="bg-red-500 hover:bg-red-700"
+                          onClick={() => deleteExpense(expense.id)}
+                        >
+                          Delete ☠️
+                        </AlertDialogAction>
+                      </AlertDialogFooter>
+                    </AlertDialogContent>
+                  </AlertDialog>
                 </TableCell>
               </TableRow>
             ))}
