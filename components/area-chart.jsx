@@ -11,15 +11,6 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { ChartContainer, ChartTooltipContent } from "@/components/ui/chart";
-const chartData = [
-  { category: "Food", amount: 186 },
-  { category: "Transportation", amount: 305 },
-  { category: "Housing", amount: 237 },
-  { category: "Entertainment", amount: 73 },
-  { category: "Shopping", amount: 209 },
-  { category: "Health", amount: 214 },
-  { category: "Other", amount: 214 },
-];
 
 const chartConfig = {
   amount: {
@@ -28,7 +19,20 @@ const chartConfig = {
   },
 };
 
-export default function AreaChartComponent() {
+export default function AreaChartComponent({ expenses }) {
+  // Group expenses by category and sum the amounts
+  const chartData =
+    expenses?.reduce((acc, expense) => {
+      const { category, amount } = expense;
+      const found = acc.find((item) => item.category === category);
+      if (found) {
+        found.amount += amount;
+      } else {
+        acc.push({ category, amount });
+      }
+      return acc;
+    }, []) || [];
+
   return (
     <Card className="w-full">
       <CardHeader>
@@ -50,7 +54,7 @@ export default function AreaChartComponent() {
             <XAxis
               dataKey="category"
               tickLine={true}
-              axisLine={true}
+              axisLine={false}
               tick={false}
               tickMargin={14}
             />

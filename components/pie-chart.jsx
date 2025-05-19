@@ -18,15 +18,6 @@ import {
   ChartTooltipContent,
 } from "@/components/ui/chart";
 
-const chartData = [
-  { category: "food", amount: 275, fill: "hsl(173, 58%, 39%)" },
-  { category: "transportation", amount: 200, fill: "hsl(12, 76%, 61%)" },
-  { category: "housing", amount: 187, fill: "hsl(197, 37%, 24%)" },
-  { category: "entertainment", amount: 173, fill: "hsl(43, 74%, 66%)" },
-  { category: "shopping", amount: 90, fill: "hsl(27, 87%, 67%)" },
-  { category: "health", amount: 90, fill: "hsl(173, 58%, 39%)" },
-  { category: "other", amount: 90, fill: "hsl(43, 74%, 66%)" },
-];
 const chartConfig = {
   amount: {
     label: "Amount",
@@ -61,10 +52,29 @@ const chartConfig = {
   },
 };
 
-export function PieChartComponent() {
+export function PieChartComponent({ expenses }) {
+  // Group expenses by category and sum the amounts
+  const chartData = React.useMemo(() => {
+    if (!expenses) return [];
+    return expenses.reduce((acc, expense) => {
+      const { category, amount } = expense;
+      const found = acc.find((item) => item.category === category);
+      if (found) {
+        found.amount += amount;
+      } else {
+        acc.push({
+          category,
+          amount,
+          fill: chartConfig[category]?.color || "hsl(0,0%,80%)",
+        });
+      }
+      return acc;
+    }, []);
+  }, [expenses]);
+
   const totalVisitors = React.useMemo(() => {
     return chartData.reduce((acc, curr) => acc + curr.amount, 0);
-  }, []);
+  }, [chartData]);
 
   return (
     <Card className="flex flex-col w-full h-full">

@@ -29,6 +29,7 @@ export default function AddExpense() {
   const session = useContext(SessionContext);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [isGenerating, setIsGenerating] = useState(false);
+  const [expenses, setExpenses] = useState([]);
   const [totalExpense, setTotalExpense] = useState(0);
   const [avarageExpense, setAvarageExpense] = useState(0);
   const [highestExpense, setHighestExpense] = useState(0);
@@ -51,6 +52,7 @@ export default function AddExpense() {
       if (error) {
         throw new Error(error.message);
       }
+      setExpenses(data);
       const expenses = data.map((expense) => expense.amount);
       const sum = expenses.reduce((acc, curr) => acc + curr, 0);
       setTotalExpense(sum);
@@ -240,6 +242,7 @@ export default function AddExpense() {
           totalExpense={totalExpense}
           latestExpense={latestExpense}
           loading={loading}
+          expenses={expenses}
         />
       </div>
     </section>

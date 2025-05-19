@@ -11,6 +11,7 @@ import { PieChartComponent } from "./pie-chart";
 import BarChartComponent from "./bar-chart";
 
 export default function ExpenseCards({
+  expenses,
   highestExpense,
   latestExpense,
   totalExpense,
@@ -75,9 +76,9 @@ export default function ExpenseCards({
         </div>
       )}
       <div className="w-full grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 place-items-center gap-4 sm:gap-6 my-6">
-        <AreaChartComponent />
-        <BarChartComponent />
-        <PieChartComponent />
+        <AreaChartComponent expenses={expenses} />
+        <BarChartComponent expenses={expenses} />
+        <PieChartComponent expenses={expenses} />
       </div>
     </div>
   );

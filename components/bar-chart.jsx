@@ -1,5 +1,6 @@
 "use client";
 
+import React from "react";
 import { TrendingUp } from "lucide-react";
 import { Bar, BarChart, XAxis, YAxis } from "recharts";
 
@@ -16,16 +17,6 @@ import {
   ChartTooltip,
   ChartTooltipContent,
 } from "@/components/ui/chart";
-
-const chartData = [
-  { category: "food", amount: 275, fill: "hsl(173, 58%, 39%)" },
-  { category: "transportation", amount: 200, fill: "hsl(12, 76%, 61%)" },
-  { category: "housing", amount: 187, fill: "hsl(197, 37%, 24%)" },
-  { category: "entertainment", amount: 173, fill: "hsl(43, 74%, 66%)" },
-  { category: "shopping", amount: 90, fill: "hsl(27, 87%, 67%)" },
-  { category: "health", amount: 90, fill: "hsl(173, 58%, 39%)" },
-  { category: "other", amount: 90, fill: "hsl(43, 74%, 66%)" },
-];
 
 const chartConfig = {
   amount: {
@@ -61,7 +52,26 @@ const chartConfig = {
   },
 };
 
-export default function BarChartComponent() {
+export default function BarChartComponent({ expenses }) {
+  // Group expenses by category and sum the amounts
+  const chartData = React.useMemo(() => {
+    if (!expenses) return [];
+    return expenses.reduce((acc, expense) => {
+      const { category, amount } = expense;
+      const found = acc.find((item) => item.category === category);
+      if (found) {
+        found.amount += amount;
+      } else {
+        acc.push({
+          category,
+          amount,
+          fill: chartConfig[category]?.color || "hsl(0,0%,80%)",
+        });
+      }
+      return acc;
+    }, []);
+  }, [expenses]);
+
   return (
     <Card className="w-full">
       <CardHeader>
