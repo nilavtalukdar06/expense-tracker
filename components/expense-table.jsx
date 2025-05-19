@@ -41,6 +41,9 @@ export default function ExpenseTable() {
   const [isLoading, setIsLoading] = useState(false);
   const [totalExpense, setTotalExpense] = useState(0);
   const [expenses, setExpenses] = useState([]);
+  const [currentPage, setCurrentPage] = useState(1); // Pagination state
+  const expensesPerPage = 10;
+
   const fetchExpenses = async () => {
     try {
       setIsLoading(true);
@@ -83,6 +86,12 @@ export default function ExpenseTable() {
     session?.user?.id && fetchExpenses();
   }, []);
 
+  // Pagination logic
+  const totalPages = Math.ceil(expenses.length / expensesPerPage);
+  const startIdx = (currentPage - 1) * expensesPerPage;
+  const endIdx = startIdx + expensesPerPage;
+  const currentExpenses = expenses.slice(startIdx, endIdx);
+
   return (
     <section>
       {isLoading ? (
@@ -90,79 +99,103 @@ export default function ExpenseTable() {
           <FadeLoader />
         </div>
       ) : (
-        <Table>
-          <TableCaption>A list of your recent invoices.</TableCaption>
-          <TableHeader>
-            <TableRow>
-              <TableHead className="w-[100px]">Serial</TableHead>
-              <TableHead>Amount</TableHead>
-              <TableHead>Category</TableHead>
-              <TableHead>Description</TableHead>
-              <TableHead className="text-right">Action</TableHead>
-            </TableRow>
-          </TableHeader>
-          <TableBody>
-            {expenses.map((expense, index) => (
-              <TableRow key={index}>
-                <TableCell className="font-medium">{index + 1}</TableCell>
-                <TableCell>{expense.amount}</TableCell>
-                <TableCell>{expense.category}</TableCell>
-                <TableCell>
-                  <Dialog>
-                    <DialogTrigger asChild>
-                      <Button className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
-                        Reveal
-                      </Button>
-                    </DialogTrigger>
-                    <DialogContent>
-                      <DialogHeader>
-                        <DialogTitle>Expense Description</DialogTitle>
-                        <DialogDescription>
-                          {expense.description}
-                        </DialogDescription>
-                      </DialogHeader>
-                    </DialogContent>
-                  </Dialog>
-                </TableCell>
+        <>
+          <Table>
+            <TableCaption>A list of your recent expenses.</TableCaption>
+            <TableHeader>
+              <TableRow>
+                <TableHead className="w-[100px]">Serial</TableHead>
+                <TableHead>Amount</TableHead>
+                <TableHead>Category</TableHead>
+                <TableHead>Description</TableHead>
+                <TableHead className="text-right">Action</TableHead>
+              </TableRow>
+            </TableHeader>
+            <TableBody>
+              {currentExpenses.map((expense, index) => (
+                <TableRow key={expense.id}>
+                  <TableCell className="font-medium">
+                    {startIdx + index + 1}
+                  </TableCell>
+                  <TableCell>{expense.amount}</TableCell>
+                  <TableCell>{expense.category}</TableCell>
+                  <TableCell>
+                    <Dialog>
+                      <DialogTrigger asChild>
+                        <Button className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
+                          Reveal
+                        </Button>
+                      </DialogTrigger>
+                      <DialogContent>
+                        <DialogHeader>
+                          <DialogTitle>Expense Description</DialogTitle>
+                          <DialogDescription>
+                            {expense.description}
+                          </DialogDescription>
+                        </DialogHeader>
+                      </DialogContent>
+                    </Dialog>
+                  </TableCell>
+                  <TableCell className="text-right">
+                    <AlertDialog>
+                      <AlertDialogTrigger asChild>
+                        <Button variant="destructive">Delete</Button>
+                      </AlertDialogTrigger>
+                      <AlertDialogContent>
+                        <AlertDialogHeader>
+                          <AlertDialogTitle>
+                            Are you absolutely sure?
+                          </AlertDialogTitle>
+                          <AlertDialogDescription>
+                            This action cannot be undone. This will permanently
+                            delete your expense and remove it from our servers.
+                          </AlertDialogDescription>
+                        </AlertDialogHeader>
+                        <AlertDialogFooter>
+                          <AlertDialogCancel>Cancel</AlertDialogCancel>
+                          <AlertDialogAction
+                            className="bg-red-500 hover:bg-red-700"
+                            onClick={() => deleteExpense(expense.id)}
+                          >
+                            Delete ☠️
+                          </AlertDialogAction>
+                        </AlertDialogFooter>
+                      </AlertDialogContent>
+                    </AlertDialog>
+                  </TableCell>
+                </TableRow>
+              ))}
+            </TableBody>
+            <TableFooter>
+              <TableRow>
+                <TableCell colSpan={4}>Total</TableCell>
                 <TableCell className="text-right">
-                  <AlertDialog>
-                    <AlertDialogTrigger asChild>
-                      <Button variant="destructive">Delete</Button>
-                    </AlertDialogTrigger>
-                    <AlertDialogContent>
-                      <AlertDialogHeader>
-                        <AlertDialogTitle>
-                          Are you absolutely sure?
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                          This action cannot be undone. This will permanently
-                          delete your expense and remove it from our servers.
-                        </AlertDialogDescription>
-                      </AlertDialogHeader>
-                      <AlertDialogFooter>
-                        <AlertDialogCancel>Cancel</AlertDialogCancel>
-                        <AlertDialogAction
-                          className="bg-red-500 hover:bg-red-700"
-                          onClick={() => deleteExpense(expense.id)}
-                        >
-                          Delete ☠️
-                        </AlertDialogAction>
-                      </AlertDialogFooter>
-                    </AlertDialogContent>
-                  </AlertDialog>
+                  &#8377;{totalExpense}
                 </TableCell>
               </TableRow>
-            ))}
-          </TableBody>
-          <TableFooter>
-            <TableRow>
-              <TableCell colSpan={4}>Total</TableCell>
-              <TableCell className="text-right">
-                &#8377;{totalExpense}
-              </TableCell>
-            </TableRow>
-          </TableFooter>
-        </Table>
+            </TableFooter>
+          </Table>
+          {/* Pagination Controls */}
+          <div className="flex justify-between items-center mt-4">
+            <Button
+              onClick={() => setCurrentPage((p) => Math.max(1, p - 1))}
+              disabled={currentPage === 1}
+              variant="outline"
+            >
+              Previous
+            </Button>
+            <span>
+              Page {currentPage} of {totalPages || 1}
+            </span>
+            <Button
+              onClick={() => setCurrentPage((p) => Math.min(totalPages, p + 1))}
+              disabled={currentPage === totalPages || totalPages === 0}
+              variant="outline"
+            >
+              Next
+            </Button>
+          </div>
+        </>
       )}
     </section>
   );
