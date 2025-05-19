@@ -13,7 +13,7 @@ export default function ExpensesPage() {
           All of your expenses till now
         </p>
       </div>
-      <div className="max-w-4xl mx-auto my-5">
+      <div className="max-w-4xl mx-auto my-5 p-4">
         <ExpenseTable />
       </div>
     </section>
