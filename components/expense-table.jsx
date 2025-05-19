@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import supabase from "@/supabase/supabase";
 import { useContext } from "react";
 import SessionContext from "@/context/session-context";
+import toast from "react-hot-toast";
+import { FadeLoader } from "react-spinners";
 
 const invoices = [
   {
@@ -89,41 +91,47 @@ export default function ExpenseTable() {
 
   return (
     <section>
-      <Table>
-        <TableCaption>A list of your recent invoices.</TableCaption>
-        <TableHeader>
-          <TableRow>
-            <TableHead className="w-[100px]">Serial</TableHead>
-            <TableHead>Amount</TableHead>
-            <TableHead>Category</TableHead>
-            <TableHead>Description</TableHead>
-            <TableHead className="text-right">Action</TableHead>
-          </TableRow>
-        </TableHeader>
-        <TableBody>
-          {invoices.map((invoice, index) => (
-            <TableRow key={invoice.invoice}>
-              <TableCell className="font-medium">{index + 1}</TableCell>
-              <TableCell>{invoice.invoice}</TableCell>
-              <TableCell>{invoice.paymentStatus}</TableCell>
-              <TableCell>
-                <Button className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
-                  Reveal
-                </Button>
-              </TableCell>
-              <TableCell className="text-right">
-                <Button variant="destructive">Delete</Button>
-              </TableCell>
+      {isLoading ? (
+        <div className="w-full my-10 flex justify-center items-center">
+          <FadeLoader />
+        </div>
+      ) : (
+        <Table>
+          <TableCaption>A list of your recent invoices.</TableCaption>
+          <TableHeader>
+            <TableRow>
+              <TableHead className="w-[100px]">Serial</TableHead>
+              <TableHead>Amount</TableHead>
+              <TableHead>Category</TableHead>
+              <TableHead>Description</TableHead>
+              <TableHead className="text-right">Action</TableHead>
             </TableRow>
-          ))}
-        </TableBody>
-        <TableFooter>
-          <TableRow>
-            <TableCell colSpan={4}>Total</TableCell>
-            <TableCell className="text-right">&#8377;2,500.00</TableCell>
-          </TableRow>
-        </TableFooter>
-      </Table>
+          </TableHeader>
+          <TableBody>
+            {expenses.map((expense, index) => (
+              <TableRow key={expense.id}>
+                <TableCell className="font-medium">{index + 1}</TableCell>
+                <TableCell>{expense.amount}</TableCell>
+                <TableCell>{expense.category}</TableCell>
+                <TableCell>
+                  <Button className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
+                    Reveal
+                  </Button>
+                </TableCell>
+                <TableCell className="text-right">
+                  <Button variant="destructive">Delete</Button>
+                </TableCell>
+              </TableRow>
+            ))}
+          </TableBody>
+          <TableFooter>
+            <TableRow>
+              <TableCell colSpan={4}>Total</TableCell>
+              <TableCell className="text-right">&#8377;2,500.00</TableCell>
+            </TableRow>
+          </TableFooter>
+        </Table>
+      )}
     </section>
   );
 }
