@@ -3,6 +3,7 @@ import { useState, useEffect } from "react";
 import { Auth } from "@supabase/auth-ui-react";
 import { ThemeSupa } from "@supabase/auth-ui-shared";
 import supabase from "@/supabase/supabase";
+import SessionContext from "@/context/session-context";
 
 export default function AuthProvider({ children }) {
   const [session, setSession] = useState(null);
@@ -36,6 +37,10 @@ export default function AuthProvider({ children }) {
       </main>
     );
   } else {
-    return children;
+    return (
+      <SessionContext.Provider value={session}>
+        {children}
+      </SessionContext.Provider>
+    );
   }
 }
