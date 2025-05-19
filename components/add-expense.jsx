@@ -47,6 +47,8 @@ export default function AddExpense() {
     category: "",
     description: "",
   });
+  const [aiInsightText, setAiInsightText] = useState("");
+  const [isInsightLoading, setIsInsightLoading] = useState(false);
 
   const fetchExpenses = async () => {
     try {
@@ -136,26 +138,60 @@ export default function AddExpense() {
     }
   };
 
-  const aiInsight = async () => {
-    try {
-      const response = await fetch("/api/generate-insight", {
-        method: "POST",
-        body: JSON.stringify({}),
-      });
-    } catch (error) {
-      console.error(error);
-      toast.error("Failed to generate ai insights");
+  useEffect(() => {
+    session?.user?.id && fetchExpenses();
+  }, []);
+
+  useEffect(() => {
+    if (!expenses.length) {
+      setAiInsightText("");
+      setIsInsightLoading(false);
+      return;
     }
-  };
+    const generateInsight = async () => {
+      try {
+        setIsInsightLoading(true);
+        setAiInsightText("");
+        const totalAmount = expenses.reduce(
+          (acc, curr) => acc + curr.amount,
+          0
+        );
+        const categoryMap = {};
+        expenses.forEach((exp) => {
+          categoryMap[exp.category] =
+            (categoryMap[exp.category] || 0) + exp.amount;
+        });
+        const categoryArr = Object.entries(categoryMap).map(
+          ([cat, amt]) => `${cat}: ${amt}`
+        );
+        const response = await fetch("/api/generate-insight", {
+          method: "POST",
+          body: JSON.stringify({
+            amount: totalAmount,
+            category: categoryArr,
+          }),
+        });
+        if (!response.ok) {
+          throw new Error(`failed to generate insight ${response.status}`);
+        }
+        const result = await response.json();
+        setAiInsightText(result.message);
+      } catch (error) {
+        console.error(error);
+        toast.error("Failed to generate ai insights");
+        setAiInsightText("");
+      } finally {
+        setIsInsightLoading(false);
+      }
+    };
+    generateInsight();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [expenses]);
 
   const handleSubmit = (event) => {
     event.preventDefault();
     submitData();
   };
-
-  useEffect(() => {
-    session?.user?.id && fetchExpenses();
-  }, []);
 
   return (
     <section>
@@ -164,18 +200,20 @@ export default function AddExpense() {
           <span>Add Expense</span>
           <Plus />
         </DialogTrigger>
-        <Card className="my-4 w-full md:max-w-2xl">
-          <CardHeader>
-            <CardTitle>Ai Insights ✨</CardTitle>
-            <CardDescription>
-              The sun dipped below the horizon, casting golden hues across the
-              tranquil lake. Birds sang softly in the distance while a gentle
-              breeze rustled the leaves. Nearby, children laughed and played,
-              unaware of the peaceful magic filling the air as twilight slowly
-              embraced the world in calm serenity.
-            </CardDescription>
-          </CardHeader>
-        </Card>
+        {expenses.length > 0 && (
+          <Card className="my-4 w-full md:max-w-2xl">
+            <CardHeader>
+              <CardTitle>Ai Insights ✨</CardTitle>
+              <CardDescription>
+                {isInsightLoading
+                  ? "Generating insights..."
+                  : aiInsightText
+                  ? aiInsightText
+                  : "No insights available"}
+              </CardDescription>
+            </CardHeader>
+          </Card>
+        )}
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex flex-col">
