@@ -31,7 +31,7 @@ export default function AuthProvider({ children }) {
           <Auth
             supabaseClient={supabase}
             appearance={{ theme: ThemeSupa }}
-            providers={[]}
+            providers={["google"]}
           />
         </section>
       </main>
