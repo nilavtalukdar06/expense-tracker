@@ -16,55 +16,19 @@ import { useContext } from "react";
 import SessionContext from "@/context/session-context";
 import toast from "react-hot-toast";
 import { FadeLoader } from "react-spinners";
-
-const invoices = [
-  {
-    invoice: "INV001",
-    paymentStatus: "Paid",
-    totalAmount: "$250.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV002",
-    paymentStatus: "Pending",
-    totalAmount: "$150.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV003",
-    paymentStatus: "Unpaid",
-    totalAmount: "$350.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV004",
-    paymentStatus: "Paid",
-    totalAmount: "$450.00",
-    paymentMethod: "Credit Card",
-  },
-  {
-    invoice: "INV005",
-    paymentStatus: "Paid",
-    totalAmount: "$550.00",
-    paymentMethod: "PayPal",
-  },
-  {
-    invoice: "INV006",
-    paymentStatus: "Pending",
-    totalAmount: "$200.00",
-    paymentMethod: "Bank Transfer",
-  },
-  {
-    invoice: "INV007",
-    paymentStatus: "Unpaid",
-    totalAmount: "$300.00",
-    paymentMethod: "Credit Card",
-  },
-];
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
 
 export default function ExpenseTable() {
   const session = useContext(SessionContext);
   const [isLoading, setIsLoading] = useState(false);
+  const [totalExpense, setTotalExpense] = useState(0);
   const [expenses, setExpenses] = useState([]);
   const fetchExpenses = async () => {
     try {
@@ -77,6 +41,9 @@ export default function ExpenseTable() {
         throw new Error(error.message);
       }
       setExpenses(data);
+      const result = data.map((expense) => expense.amount);
+      const sum = result.reduce((acc, curr) => acc + curr, 0);
+      setTotalExpense(sum);
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch expenses");
@@ -114,9 +81,21 @@ export default function ExpenseTable() {
                 <TableCell>{expense.amount}</TableCell>
                 <TableCell>{expense.category}</TableCell>
                 <TableCell>
-                  <Button className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
-                    Reveal
-                  </Button>
+                  <Dialog>
+                    <DialogTrigger asChild>
+                      <Button className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
+                        Reveal
+                      </Button>
+                    </DialogTrigger>
+                    <DialogContent>
+                      <DialogHeader>
+                        <DialogTitle>Expense Description</DialogTitle>
+                        <DialogDescription>
+                          {expense.description}
+                        </DialogDescription>
+                      </DialogHeader>
+                    </DialogContent>
+                  </Dialog>
                 </TableCell>
                 <TableCell className="text-right">
                   <Button variant="destructive">Delete</Button>
@@ -127,7 +106,9 @@ export default function ExpenseTable() {
           <TableFooter>
             <TableRow>
               <TableCell colSpan={4}>Total</TableCell>
-              <TableCell className="text-right">&#8377;2,500.00</TableCell>
+              <TableCell className="text-right">
+                &#8377;{totalExpense}
+              </TableCell>
             </TableRow>
           </TableFooter>
         </Table>
