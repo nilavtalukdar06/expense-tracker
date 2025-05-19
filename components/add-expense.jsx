@@ -166,8 +166,6 @@ export default function AddExpense() {
                   </button>
                 </div>
               </div>
-
-              <div className="my-2 border-t border-slate-300 border-dashed" />
               <Button
                 className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] w-full"
                 type="submit"
