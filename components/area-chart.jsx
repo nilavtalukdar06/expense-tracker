@@ -36,9 +36,10 @@ export default function AreaChartComponent({ expenses }) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Area Chart</CardTitle>
+        <CardTitle>Expenses by Category (Area Chart)</CardTitle>
         <CardDescription>
-          Showing total visitors for the last 6 months
+          Visual breakdown of your spending across categories for the last 6
+          months
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -76,10 +77,11 @@ export default function AreaChartComponent({ expenses }) {
         <div className="flex w-full items-start gap-2 text-sm">
           <div className="grid gap-2">
             <div className="flex items-center gap-2 font-medium leading-none">
-              Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+              Spending increased by 5.2% this month{" "}
+              <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024
+              January - June 2024 | Track your expenses and manage your budget
             </div>
           </div>
         </div>

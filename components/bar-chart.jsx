@@ -75,8 +75,10 @@ export default function BarChartComponent({ expenses }) {
   return (
     <Card className="w-full">
       <CardHeader>
-        <CardTitle>Bar Chart - Mixed</CardTitle>
-        <CardDescription>January - June 2024</CardDescription>
+        <CardTitle>Expenses by Category (Bar Chart)</CardTitle>
+        <CardDescription>
+          Compare your spending across categories for the last 6 months
+        </CardDescription>
       </CardHeader>
       <CardContent>
         <ChartContainer config={chartConfig}>
@@ -112,10 +114,11 @@ export default function BarChartComponent({ expenses }) {
       </CardContent>
       <CardFooter className="flex-col items-start gap-2 text-sm">
         <div className="flex gap-2 font-medium leading-none">
-          Trending up by 5.2% this month <TrendingUp className="h-4 w-4" />
+          Your highest expense category is highlighted{" "}
+          <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          Showing total visitors for the last 6 months
+          January - June 2024 | Analyze and optimize your expenses
         </div>
       </CardFooter>
     </Card>
