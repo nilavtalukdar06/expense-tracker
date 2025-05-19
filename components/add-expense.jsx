@@ -1,5 +1,5 @@
 "use client";
-import { Plus } from "lucide-react";
+import { Plus, Sparkles } from "lucide-react";
 import supabase from "@/supabase/supabase";
 import { Button } from "./ui/button";
 import {
@@ -25,6 +25,7 @@ import toast from "react-hot-toast";
 
 export default function AddExpense() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isGenerating, setIsGenerating] = useState(false);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     amount: "",
@@ -35,6 +36,10 @@ export default function AddExpense() {
   const submitData = async () => {
     try {
       setIsSubmitting(true);
+      if (!formData.amount || !formData.category || !formData.description) {
+        toast.error("Complete the form");
+        return;
+      }
       const { error } = await supabase.from("expenses").insert(formData);
       if (error) {
         throw new Error(error.message);
@@ -47,6 +52,33 @@ export default function AddExpense() {
       toast.error("Failed to submit");
     } finally {
       setIsSubmitting(false);
+    }
+  };
+
+  const generateContent = async () => {
+    try {
+      setIsGenerating(true);
+      if (!formData.amount || !formData.category) {
+        toast.error("Enter amount and category");
+        return;
+      }
+      const response = await fetch("/api/generate-content", {
+        method: "POST",
+        body: JSON.stringify({
+          amount: formData.amount,
+          category: formData.category,
+        }),
+      });
+      if (!response.ok) {
+        throw new Error(`failed to generate content ${response.status}`);
+      }
+      const result = await response.json();
+      setFormData({ ...formData, description: result.message });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to generate content");
+    } finally {
+      setIsGenerating(false);
     }
   };
 
@@ -78,6 +110,7 @@ export default function AddExpense() {
                   type="number"
                   id="amount"
                   value={formData.amount}
+                  disabled={isSubmitting || isGenerating}
                   onChange={(e) =>
                     setFormData({ ...formData, amount: e.target.value })
                   }
@@ -90,6 +123,7 @@ export default function AddExpense() {
                 <Select
                   id="category"
                   value={formData.category}
+                  disabled={isSubmitting || isGenerating}
                   onValueChange={(value) =>
                     setFormData({ ...formData, category: value })
                   }
@@ -112,25 +146,41 @@ export default function AddExpense() {
               </div>
               <div className="flex flex-col gap-y-1 space-y-2">
                 <Label htmlFor="description">Enter description</Label>
-                <Textarea
-                  placeholder="Enter Description"
-                  id="description"
-                  value={formData.description}
-                  onChange={(e) =>
-                    setFormData({ ...formData, description: e.target.value })
-                  }
-                />
+                <div className="relative w-full h-fit">
+                  <Textarea
+                    placeholder="Enter Description"
+                    id="description"
+                    disabled={isSubmitting || isGenerating}
+                    value={formData.description}
+                    onChange={(e) =>
+                      setFormData({ ...formData, description: e.target.value })
+                    }
+                  />
+                  <button
+                    className="p-2 rounded-lg hover:bg-gray-100 absolute transition-colors cursor-pointer right-2 bottom-2 z-20"
+                    type="button"
+                    disabled={isGenerating || isSubmitting}
+                    onClick={generateContent}
+                  >
+                    <Sparkles size={18} />
+                  </button>
+                </div>
               </div>
 
               <div className="my-2 border-t border-slate-300 border-dashed" />
               <Button
                 className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] w-full"
                 type="submit"
-                disabled={isSubmitting}
+                disabled={isSubmitting || isGenerating}
               >
                 {isSubmitting ? (
                   <span className="flex gap-x-2 items-center justify-center">
                     Adding...
+                    <Spinner />
+                  </span>
+                ) : isGenerating ? (
+                  <span className="flex gap-x-2 items-center justify-center">
+                    Generating with AI...
                     <Spinner />
                   </span>
                 ) : (
