@@ -34,7 +34,7 @@ export default function AreaChartComponent({ expenses }) {
     }, []) || [];
 
   return (
-    <Card className="w-full">
+    <Card className="w-full h-full">
       <CardHeader>
         <CardTitle>Expenses by Category (Area Chart)</CardTitle>
         <CardDescription>

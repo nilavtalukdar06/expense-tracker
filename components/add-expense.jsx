@@ -56,9 +56,22 @@ export default function AddExpense() {
       const expenses = data.map((expense) => expense.amount);
       const sum = expenses.reduce((acc, curr) => acc + curr, 0);
       setTotalExpense(sum);
-      setAvarageExpense((sum / expenses.length).toFixed(2));
-      setHighestExpense(Math.max(...expenses));
-      setLatestExpense(expenses[expenses.length - 1]);
+      if (!isNaN((sum / expenses.length).toFixed(2))) {
+        setAvarageExpense((sum / expenses.length).toFixed(2));
+      } else {
+        setAvarageExpense(0);
+      }
+
+      if (expenses.length !== 0) {
+        setHighestExpense(Math.max(...expenses));
+      } else {
+        setHighestExpense(0);
+      }
+      if (expenses[expenses.length - 1]) {
+        setLatestExpense(expenses[expenses.length - 1]);
+      } else {
+        setLatestExpense(0);
+      }
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch expenses");
