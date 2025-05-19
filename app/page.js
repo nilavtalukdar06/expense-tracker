@@ -1,3 +1,4 @@
+import AddExpense from "@/components/add-expense";
 import Navbar from "./navbar";
 
 export default function Home() {
@@ -11,6 +12,7 @@ export default function Home() {
         <p className="max-w-lg my-1 text-gray-500 text-sm">
           Add and manage your expenses at one place
         </p>
+        <AddExpense />
       </div>
     </section>
   );
