@@ -81,8 +81,7 @@ export function PieChartComponent({ expenses }) {
       <CardHeader className="items-center pb-0">
         <CardTitle>Expense Distribution (Pie Chart)</CardTitle>
         <CardDescription>
-          See how your expenses are distributed by category for the last 6
-          months
+          See how your expenses are distributed by category
         </CardDescription>
       </CardHeader>
       <CardContent className="flex-1 pb-0">
@@ -141,7 +140,7 @@ export function PieChartComponent({ expenses }) {
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          January - June 2024 | Gain insights to improve your budgeting
+          Gain insights to improve your budgeting
         </div>
       </CardFooter>
     </Card>

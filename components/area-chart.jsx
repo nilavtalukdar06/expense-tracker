@@ -38,8 +38,7 @@ export default function AreaChartComponent({ expenses }) {
       <CardHeader>
         <CardTitle>Expenses by Category (Area Chart)</CardTitle>
         <CardDescription>
-          Visual breakdown of your spending across categories for the last 6
-          months
+          Visual breakdown of your spending across categories
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -81,7 +80,7 @@ export default function AreaChartComponent({ expenses }) {
               <TrendingUp className="h-4 w-4" />
             </div>
             <div className="flex items-center gap-2 leading-none text-muted-foreground">
-              January - June 2024 | Track your expenses and manage your budget
+              Track your expenses and manage your budget
             </div>
           </div>
         </div>

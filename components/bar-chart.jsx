@@ -77,7 +77,7 @@ export default function BarChartComponent({ expenses }) {
       <CardHeader>
         <CardTitle>Expenses by Category (Bar Chart)</CardTitle>
         <CardDescription>
-          Compare your spending across categories for the last 6 months
+          Compare your spending across categories
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -118,7 +118,7 @@ export default function BarChartComponent({ expenses }) {
           <TrendingUp className="h-4 w-4" />
         </div>
         <div className="leading-none text-muted-foreground">
-          January - June 2024 | Analyze and optimize your expenses
+          Analyze and optimize your expenses
         </div>
       </CardFooter>
     </Card>
