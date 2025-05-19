@@ -1,5 +1,6 @@
 "use client";
 import { Plus } from "lucide-react";
+import supabase from "@/supabase/supabase";
 import { Button } from "./ui/button";
 import {
   Dialog,
@@ -20,17 +21,42 @@ import { Textarea } from "./ui/textarea";
 import { Label } from "./ui/label";
 import { useState } from "react";
 import Spinner from "./ui/spinner";
+import toast from "react-hot-toast";
 
 export default function AddExpense() {
   const [isSubmitting, setIsSubmitting] = useState(false);
+  const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
-    amount: 0,
+    amount: "",
     category: "",
     description: "",
   });
 
+  const submitData = async () => {
+    try {
+      setIsSubmitting(true);
+      const { error } = await supabase.from("expenses").insert(formData);
+      if (error) {
+        throw new Error(error.message);
+      }
+      setOpen(false);
+      setFormData({ ...formData, amount: "", category: "", description: "" });
+      toast.success("Expense added");
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to submit");
+    } finally {
+      setIsSubmitting(false);
+    }
+  };
+
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    submitData();
+  };
+
   return (
-    <Dialog className="my-2">
+    <Dialog className="my-2" open={open} onOpenChange={setOpen}>
       <DialogTrigger className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] flex gap-x-2 items-center justify-center px-3 py-2 rounded text-white cursor-pointer">
         <span>Add Expense</span>
         <Plus />
@@ -44,7 +70,7 @@ export default function AddExpense() {
             </span>
           </DialogTitle>
           <div className="my-4">
-            <form className="flex flex-col gap-y-4">
+            <form className="flex flex-col gap-y-4" onSubmit={handleSubmit}>
               <div className="flex flex-col gap-y-1 space-y-2">
                 <Label htmlFor="amount">Enter amount</Label>
                 <Input

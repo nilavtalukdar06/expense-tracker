@@ -1,6 +1,7 @@
 import { Outfit } from "next/font/google";
 import AuthProvider from "@/utils/AuthProvider";
 import "./globals.css";
+import { Toaster } from "react-hot-toast";
 
 const outfit = Outfit({
   subsets: ["latin"],
@@ -18,6 +19,7 @@ export default function RootLayout({ children }) {
         <AuthProvider>
           <main>{children}</main>
         </AuthProvider>
+        <Toaster />
       </body>
     </html>
   );
