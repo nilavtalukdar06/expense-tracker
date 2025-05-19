@@ -33,6 +33,7 @@ export default function AddExpense() {
   const [avarageExpense, setAvarageExpense] = useState(0);
   const [highestExpense, setHighestExpense] = useState(0);
   const [latestExpense, setLatestExpense] = useState(0);
+  const [loading, setIsLoading] = useState(false);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     amount: "",
@@ -42,6 +43,7 @@ export default function AddExpense() {
 
   const fetchExpenses = async () => {
     try {
+      setIsLoading(true);
       const { data, error } = await supabase
         .from("expenses")
         .select("*")
@@ -58,6 +60,8 @@ export default function AddExpense() {
     } catch (error) {
       console.error(error);
       toast.error("Failed to fetch expenses");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -73,6 +77,7 @@ export default function AddExpense() {
         throw new Error(error.message);
       }
       setOpen(false);
+      fetchExpenses();
       setFormData({ ...formData, amount: "", category: "", description: "" });
       toast.success("Expense added");
     } catch (error) {
@@ -234,6 +239,7 @@ export default function AddExpense() {
           avarageExpense={avarageExpense}
           totalExpense={totalExpense}
           latestExpense={latestExpense}
+          loading={loading}
         />
       </div>
     </section>
