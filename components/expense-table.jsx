@@ -1,3 +1,4 @@
+"use client";
 import {
   Table,
   TableBody,
@@ -9,6 +10,10 @@ import {
   TableRow,
 } from "@/components/ui/table";
 import { Button } from "./ui/button";
+import { useEffect, useState } from "react";
+import supabase from "@/supabase/supabase";
+import { useContext } from "react";
+import SessionContext from "@/context/session-context";
 
 const invoices = [
   {
@@ -56,6 +61,32 @@ const invoices = [
 ];
 
 export default function ExpenseTable() {
+  const session = useContext(SessionContext);
+  const [isLoading, setIsLoading] = useState(false);
+  const [expenses, setExpenses] = useState([]);
+  const fetchExpenses = async () => {
+    try {
+      setIsLoading(true);
+      const { data, error } = await supabase
+        .from("expenses")
+        .select("*")
+        .eq("user_id", session?.user?.id);
+      if (error) {
+        throw new Error(error.message);
+      }
+      setExpenses(data);
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to fetch expenses");
+    } finally {
+      setIsLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    session?.user?.id && fetchExpenses();
+  }, []);
+
   return (
     <section>
       <Table>
