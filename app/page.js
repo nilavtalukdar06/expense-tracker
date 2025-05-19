@@ -1,6 +1,5 @@
 import AddExpense from "@/components/add-expense";
 import Navbar from "./navbar";
-import ExpenseCards from "@/components/expense-cards";
 
 export default function Home() {
   return (
@@ -14,9 +13,6 @@ export default function Home() {
           Add and manage your expenses at one place
         </p>
         <AddExpense />
-        <div className="my-6 max-w-screen">
-          <ExpenseCards />
-        </div>
       </div>
     </section>
   );
