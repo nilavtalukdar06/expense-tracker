@@ -5,11 +5,9 @@ const ai = new GoogleGenAI({ apiKey: process.env.GEMINI_API_KEY });
 async function insight(amount, category) {
   const response = await ai.models.generateContent({
     model: "gemini-2.0-flash",
-    contents: `Given the amount (${amount}) and the category (${category}), generate a realistic, concise, and contextually appropriate expense description that explains what the expense was for.`,
-    config: {
-      systemInstruction:
-        "You are a professional financial advisor. The user will provide an amount and an expense category. Based on this input, generate a concise and informative 20-25 word description summarizing the nature of the expense, its potential impact on personal finances, and whether it appears essential, discretionary, or avoidable. Remember all transactions are in Indian Rupees (INR)",
-    },
+    contents: `Analyze the categorized spending data where the total amount is ${amount}, distributed across the following categories: ${[
+      ...category,
+    ]}. Generate concise and actionable financial insights in 50-60 words. Identify the top spending categories, detect any unusually high or low expenditures, suggest optimization opportunities, and summarize the user's overall financial behavior.`,
   });
   return response.text;
 }

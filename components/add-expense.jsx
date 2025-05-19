@@ -136,6 +136,18 @@ export default function AddExpense() {
     }
   };
 
+  const aiInsight = async () => {
+    try {
+      const response = await fetch("/api/generate-insight", {
+        method: "POST",
+        body: JSON.stringify({}),
+      });
+    } catch (error) {
+      console.error(error);
+      toast.error("Failed to generate ai insights");
+    }
+  };
+
   const handleSubmit = (event) => {
     event.preventDefault();
     submitData();
