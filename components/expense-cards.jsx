@@ -6,6 +6,8 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Skeleton } from "@/components/ui/skeleton";
+import AreaChartComponent from "./area-chart";
+import { PieChartComponent } from "./pie-chart";
 
 export default function ExpenseCards({
   highestExpense,
@@ -71,6 +73,10 @@ export default function ExpenseCards({
           </Card>
         </div>
       )}
+      <div className="w-full grid grid-cols-1 md:grid-cols-2 place-items-center gap-4 sm:gap-6 my-6">
+        <AreaChartComponent />
+        <PieChartComponent />
+      </div>
     </div>
   );
 }
