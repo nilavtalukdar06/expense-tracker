@@ -8,7 +8,7 @@ async function main(amount, category) {
     contents: `Given the amount (${amount}) and the category (${category}), generate a realistic, concise, and contextually appropriate expense description that explains what the expense was for.`,
     config: {
       systemInstruction:
-        "You are a professional financial advisor. The user will provide an amount and an expense category. Based on this input, generate a concise and informative 20-25 word description summarizing the nature of the expense, its potential impact on personal finances, and whether it appears essential, discretionary, or avoidable.",
+        "You are a professional financial advisor. The user will provide an amount and an expense category. Based on this input, generate a concise and informative 20-25 word description summarizing the nature of the expense, its potential impact on personal finances, and whether it appears essential, discretionary, or avoidable. Remember all transactions are in Indian Rupees (INR)",
     },
   });
   return response.text;
