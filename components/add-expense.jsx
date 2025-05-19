@@ -24,6 +24,12 @@ import { useState, useEffect, useContext } from "react";
 import Spinner from "./ui/spinner";
 import toast from "react-hot-toast";
 import SessionContext from "@/context/session-context";
+import {
+  Card,
+  CardHeader,
+  CardDescription,
+  CardTitle,
+} from "@/components/ui/card";
 
 export default function AddExpense() {
   const session = useContext(SessionContext);
@@ -146,6 +152,18 @@ export default function AddExpense() {
           <span>Add Expense</span>
           <Plus />
         </DialogTrigger>
+        <Card className="my-4 w-full md:max-w-2xl">
+          <CardHeader>
+            <CardTitle>Ai Insights ✨</CardTitle>
+            <CardDescription>
+              The sun dipped below the horizon, casting golden hues across the
+              tranquil lake. Birds sang softly in the distance while a gentle
+              breeze rustled the leaves. Nearby, children laughed and played,
+              unaware of the peaceful magic filling the air as twilight slowly
+              embraced the world in calm serenity.
+            </CardDescription>
+          </CardHeader>
+        </Card>
         <DialogContent>
           <DialogHeader>
             <DialogTitle className="flex flex-col">
