@@ -12,6 +12,17 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MenuIcon } from "lucide-react";
 import SessionContext from "@/context/session-context";
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+  AlertDialogTrigger,
+} from "@/components/ui/alert-dialog";
 
 export default function Navbar() {
   const session = useContext(SessionContext);
@@ -79,45 +90,11 @@ export default function Navbar() {
         </Link>
       </nav>
       <div className="flex justify-end items-center gap-x-3 flex-1">
-        <button
-          className={`group flex h-9 items-center gap-2 rounded-full pl-4 pr-5 text-sm font-medium ring-1 ring-inset transition-all
-                ${
-                  isMember
-                    ? "bg-[#3fcf8e]/10 text-[#34b27b] ring-[#34b27b]/20 hover:bg-[#34b27b]/20"
-                    : "bg-red-500/10 text-red-500 ring-red-500/20 hover:bg-red-500/20"
-                }
-              `}
-        >
-          <span
-            className={`h-1.5 w-1.5 rounded-full animate-pulse ${
-              isMember ? "bg-[#3fcf8e]" : "bg-red-500"
-            }`}
-          />
-          {isMember ? "Subscriber" : "Subscribe"}
-        </button>
-        <Button
-          className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] max-sm:hidden"
-          onClick={logout}
-          disabled={isLoggingOut}
-        >
-          {isLoggingOut ? "Logging out..." : "Logout"}
-        </Button>
-      </div>
-
-      <DropdownMenu>
-        <DropdownMenuTrigger className="p-1 border rounded sm:hidden cursor-pointer">
-          <MenuIcon size={18} />
-        </DropdownMenuTrigger>
-        <DropdownMenuContent>
-          <DropdownMenuItem>
-            <Link href="/">Add Expense</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
-            <Link href="/expenses">Expenses</Link>
-          </DropdownMenuItem>
-          <DropdownMenuItem>
+        <AlertDialog>
+          <AlertDialogTrigger>
             <button
-              className={`group flex h-9 items-center gap-2 rounded-full pl-4 pr-5 text-sm font-medium ring-1 ring-inset transition-all
+              asChild
+              className={`group flex h-9 items-center gap-2 rounded-full pl-4 pr-5 text-sm font-medium ring-1 ring-inset transition-all cursor-pointer
                 ${
                   isMember
                     ? "bg-[#3fcf8e]/10 text-[#34b27b] ring-[#34b27b]/20 hover:bg-[#34b27b]/20"
@@ -132,6 +109,43 @@ export default function Navbar() {
               />
               {isMember ? "Subscriber" : "Subscribe"}
             </button>
+          </AlertDialogTrigger>
+          <AlertDialogContent>
+            <AlertDialogHeader>
+              <AlertDialogTitle>Become a premium member</AlertDialogTitle>
+              <AlertDialogDescription>
+                Get AI powered financial advice and budget description
+                generation at just rupees 49&#8377;
+              </AlertDialogDescription>
+            </AlertDialogHeader>
+            <AlertDialogFooter>
+              <AlertDialogCancel>Cancel</AlertDialogCancel>
+              <AlertDialogAction className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
+                Continue
+              </AlertDialogAction>
+            </AlertDialogFooter>
+          </AlertDialogContent>
+        </AlertDialog>
+
+        <Button
+          className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] max-sm:hidden"
+          onClick={logout}
+          disabled={isLoggingOut}
+        >
+          {isLoggingOut ? "Logging out..." : "Logout"}
+        </Button>
+      </div>
+
+      <DropdownMenu>
+        <DropdownMenuTrigger className="p-1 border rounded sm:hidden cursor-pointer ml-4">
+          <MenuIcon size={18} />
+        </DropdownMenuTrigger>
+        <DropdownMenuContent>
+          <DropdownMenuItem>
+            <Link href="/">Add Expense</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <Link href="/expenses">Expenses</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Button
