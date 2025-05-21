@@ -124,6 +124,7 @@ export default function AddExpense() {
         body: JSON.stringify({
           amount: formData.amount,
           category: formData.category,
+          is_member: isMember,
         }),
       });
       if (!response.ok) {
@@ -170,6 +171,7 @@ export default function AddExpense() {
           body: JSON.stringify({
             amount: totalAmount,
             category: categoryArr,
+            is_member: isMember,
           }),
         });
         if (!response.ok) {
