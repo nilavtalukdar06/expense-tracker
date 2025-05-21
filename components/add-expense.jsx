@@ -192,8 +192,7 @@ export default function AddExpense() {
       }
     };
     isMember && generateInsight();
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [expenses]);
+  }, [expenses, isMember]);
 
   const checkUser = async () => {
     try {

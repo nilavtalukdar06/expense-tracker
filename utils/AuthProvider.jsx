@@ -28,16 +28,22 @@ export default function AuthProvider({ children }) {
       if (error) {
         throw new Error(error.message);
       }
-      if (data.length === 0) {
+      console.log(data);
+      if (data[0]?.user_id) {
+        console.log("user is already present");
+      } else {
         try {
-          const { error } = await supabase
-            .from("users")
-            .insert([{ user_id: session?.user?.id, is_member: false }]);
+          const { error } = await supabase.from("users").insert([
+            {
+              user_id: session?.user?.id,
+              is_member: false,
+            },
+          ]);
           if (error) {
             throw new Error(error.message);
           }
         } catch (error) {
-          throw new Error(error);
+          console.error(error);
         }
       }
     } catch (error) {

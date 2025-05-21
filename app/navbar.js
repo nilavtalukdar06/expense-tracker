@@ -70,6 +70,7 @@ export default function Navbar() {
       if (error) {
         throw new Error(error.message);
       }
+      window.location.reload();
     } catch (error) {
       console.error(error);
       toast.error("Couldn't upgrade you to a premium member");
@@ -87,12 +88,12 @@ export default function Navbar() {
         key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
         amount: AMOUNT * 100,
         currency: "INR",
-        name: "Nilav",
+        name: session?.user?.user_metadata?.full_name,
         description: "Test Transaction",
         order_id: data.orderId,
         handler: premiumMember,
         prefill: {
-          name: session?.user?.name || "Guest",
+          name: session?.user?.user_metadata?.full_name || "Guest",
           email: session?.user?.email,
         },
         theme: {
