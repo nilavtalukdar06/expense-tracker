@@ -134,7 +134,9 @@ export default function AddExpense() {
       setFormData({ ...formData, description: result.message });
     } catch (error) {
       console.error(error);
-      toast.error("Failed to generate content");
+      if (isMember) {
+        toast.error("Failed to generate content");
+      }
     } finally {
       setIsGenerating(false);
     }
