@@ -41,6 +41,7 @@ export default function AddExpense() {
   const [highestExpense, setHighestExpense] = useState(0);
   const [latestExpense, setLatestExpense] = useState(0);
   const [loading, setIsLoading] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   const [open, setOpen] = useState(false);
   const [formData, setFormData] = useState({
     amount: "",
@@ -188,6 +189,26 @@ export default function AddExpense() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses]);
 
+  const checkUser = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("user_id", session?.user?.id);
+      if (error) {
+        throw new Error(error.message);
+      } else {
+        setIsMember(data[0].is_member);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    session?.user?.id && checkUser();
+  }, [session]);
+
   const handleSubmit = (event) => {
     event.preventDefault();
     submitData();
@@ -200,7 +221,7 @@ export default function AddExpense() {
           <span>Add Expense</span>
           <Plus />
         </DialogTrigger>
-        {expenses.length > 0 && (
+        {expenses.length > 0 && isMember && (
           <Card className="my-4 w-full md:max-w-2xl">
             <CardHeader>
               <CardTitle>Ai Insights ✨</CardTitle>
@@ -282,14 +303,16 @@ export default function AddExpense() {
                         })
                       }
                     />
-                    <button
-                      className="p-2 rounded-lg hover:bg-gray-100 absolute transition-colors cursor-pointer right-2 bottom-2 z-20"
-                      type="button"
-                      disabled={isGenerating || isSubmitting}
-                      onClick={generateContent}
-                    >
-                      <Sparkles size={18} />
-                    </button>
+                    {isMember && (
+                      <button
+                        className="p-2 rounded-lg hover:bg-gray-100 absolute transition-colors cursor-pointer right-2 bottom-2 z-20"
+                        type="button"
+                        disabled={isGenerating || isSubmitting}
+                        onClick={generateContent}
+                      >
+                        <Sparkles size={18} />
+                      </button>
+                    )}
                   </div>
                 </div>
                 <Button
