@@ -6,7 +6,7 @@ const razorpay = new Razorpay({
   key_secret: process.env.RAZORPAY_KEY_SECRET,
 });
 
-export async function POST(request) {
+export async function POST() {
   try {
     const order = await razorpay.orders.create({
       amount: 49 * 100,
