@@ -19,6 +19,37 @@ export default function AuthProvider({ children }) {
     return () => subscription.unsubscribe();
   }, []);
 
+  const createUser = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("user_id", session?.user?.id);
+      if (error) {
+        throw new Error(error.message);
+      }
+      if (data.length === 0) {
+        try {
+          const { error } = await supabase
+            .from("users")
+            .insert([{ user_id: session?.user?.id, is_member: false }]);
+          if (error) {
+            throw new Error(error.message);
+          }
+        } catch (error) {
+          throw new Error(error);
+        }
+      }
+      console.log(data);
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    session && createUser();
+  }, [session]);
+
   if (!session) {
     return (
       <main className="min-h-screen max-w-screen overflow-x-hidden relative p-4 sm:p-6">
