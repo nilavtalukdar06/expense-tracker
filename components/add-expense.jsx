@@ -183,13 +183,15 @@ export default function AddExpense() {
         setAiInsightText(result.message);
       } catch (error) {
         console.error(error);
-        toast.error("Failed to generate ai insights");
+        if (isMember) {
+          toast.error("Failed to generate ai insights");
+        }
         setAiInsightText("");
       } finally {
         setIsInsightLoading(false);
       }
     };
-    generateInsight();
+    isMember && generateInsight();
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [expenses]);
 

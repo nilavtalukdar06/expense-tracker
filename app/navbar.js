@@ -61,6 +61,21 @@ export default function Navbar() {
     }
   };
 
+  const premiumMember = async () => {
+    try {
+      const { error } = await supabase
+        .from("users")
+        .update({ is_member: true })
+        .eq("user_id", session?.user?.id);
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't upgrade you to a premium member");
+    }
+  };
+
   const createOrder = async () => {
     setIsProcessing(true);
 
@@ -75,9 +90,7 @@ export default function Navbar() {
         name: "Nilav",
         description: "Test Transaction",
         order_id: data.orderId,
-        handler: function (response) {
-          console.log("Payment Successful", response);
-        },
+        handler: premiumMember,
         prefill: {
           name: session?.user?.name || "Guest",
           email: session?.user?.email,
@@ -92,21 +105,6 @@ export default function Navbar() {
       console.error("Payment Failed", error);
     } finally {
       setIsProcessing(false);
-    }
-  };
-
-  const premiumMember = async () => {
-    try {
-      const { error } = await supabase
-        .from("users")
-        .update({ is_member: true })
-        .eq("user_id", session?.user?.id);
-      if (error) {
-        throw new Error(error.message);
-      }
-    } catch (error) {
-      console.error(error);
-      toast.error("Couldn't upgrade you to a premium member");
     }
   };
 
