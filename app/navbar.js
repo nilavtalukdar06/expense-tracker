@@ -1,5 +1,5 @@
 "use client";
-import { useState } from "react";
+import { useState, useContext, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import supabase from "@/supabase/supabase";
 import Image from "next/image";
@@ -8,14 +8,15 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { MenuIcon } from "lucide-react";
+import SessionContext from "@/context/session-context";
 
 export default function Navbar() {
+  const session = useContext(SessionContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
+  const [isMember, setIsMember] = useState(false);
   const logout = async () => {
     try {
       setIsLoggingOut(true);
@@ -29,6 +30,26 @@ export default function Navbar() {
       setIsLoggingOut(false);
     }
   };
+
+  const checkUser = async () => {
+    try {
+      const { data, error } = await supabase
+        .from("users")
+        .select("*")
+        .eq("user_id", session?.user?.id);
+      if (error) {
+        throw new Error(error.message);
+      } else {
+        setIsMember(data[0].is_member);
+      }
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
+  useEffect(() => {
+    session?.user?.id && checkUser();
+  }, [session]);
 
   const reload = () => {
     window.location.reload();
@@ -57,7 +78,10 @@ export default function Navbar() {
           Expenses
         </Link>
       </nav>
-      <div className="flex justify-end items-center flex-1">
+      <div className="flex justify-end items-center gap-x-3 flex-1">
+        <button className="text-sm text-slate-600">
+          {!isMember && <span>Go Premium</span>}
+        </button>
         <Button
           className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] max-sm:hidden"
           onClick={logout}
@@ -77,6 +101,11 @@ export default function Navbar() {
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Link href="/expenses">Expenses</Link>
+          </DropdownMenuItem>
+          <DropdownMenuItem>
+            <button className="text-sm text-slate-600">
+              {!isMember && <span>Go Premium</span>}
+            </button>
           </DropdownMenuItem>
           <DropdownMenuItem>
             <Button
