@@ -79,8 +79,21 @@ export default function Navbar() {
         </Link>
       </nav>
       <div className="flex justify-end items-center gap-x-3 flex-1">
-        <button className="text-sm text-slate-600">
-          {!isMember && <span>Go Premium</span>}
+        <button
+          className={`group flex h-9 items-center gap-2 rounded-full pl-4 pr-5 text-sm font-medium ring-1 ring-inset transition-all
+                ${
+                  isMember
+                    ? "bg-[#3fcf8e]/10 text-[#34b27b] ring-[#34b27b]/20 hover:bg-[#34b27b]/20"
+                    : "bg-red-500/10 text-red-500 ring-red-500/20 hover:bg-red-500/20"
+                }
+              `}
+        >
+          <span
+            className={`h-1.5 w-1.5 rounded-full animate-pulse ${
+              isMember ? "bg-[#3fcf8e]" : "bg-red-500"
+            }`}
+          />
+          {isMember ? "Subscriber" : "Subscribe"}
         </button>
         <Button
           className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] max-sm:hidden"
@@ -103,8 +116,21 @@ export default function Navbar() {
             <Link href="/expenses">Expenses</Link>
           </DropdownMenuItem>
           <DropdownMenuItem>
-            <button className="text-sm text-slate-600">
-              {!isMember && <span>Go Premium</span>}
+            <button
+              className={`group flex h-9 items-center gap-2 rounded-full pl-4 pr-5 text-sm font-medium ring-1 ring-inset transition-all
+                ${
+                  isMember
+                    ? "bg-[#3fcf8e]/10 text-[#34b27b] ring-[#34b27b]/20 hover:bg-[#34b27b]/20"
+                    : "bg-red-500/10 text-red-500 ring-red-500/20 hover:bg-red-500/20"
+                }
+              `}
+            >
+              <span
+                className={`h-1.5 w-1.5 rounded-full animate-pulse ${
+                  isMember ? "bg-[#3fcf8e]" : "bg-red-500"
+                }`}
+              />
+              {isMember ? "Subscriber" : "Subscribe"}
             </button>
           </DropdownMenuItem>
           <DropdownMenuItem>
