@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { MenuIcon } from "lucide-react";
 import SessionContext from "@/context/session-context";
+import Script from "next/script";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -28,6 +29,8 @@ export default function Navbar() {
   const session = useContext(SessionContext);
   const [isLoggingOut, setIsLoggingOut] = useState(false);
   const [isMember, setIsMember] = useState(false);
+  const [isProcessing, setIsProcessing] = useState(false);
+  const AMOUNT = 49;
   const logout = async () => {
     try {
       setIsLoggingOut(true);
@@ -58,6 +61,40 @@ export default function Navbar() {
     }
   };
 
+  const createOrder = async () => {
+    setIsProcessing(true);
+
+    try {
+      const response = await fetch("/api/create-order", { method: "POST" });
+      const data = await response.json();
+
+      const options = {
+        key: process.env.NEXT_PUBLIC_RAZORPAY_KEY_ID,
+        amount: AMOUNT * 100,
+        currency: "INR",
+        name: "Nilav",
+        description: "Test Transaction",
+        order_id: data.orderId,
+        handler: function (response) {
+          console.log("Payment Successful", response);
+        },
+        prefill: {
+          name: session?.user?.name || "Guest",
+          email: session?.user?.email,
+        },
+        theme: {
+          color: "#3399c",
+        },
+      };
+      const rzp1 = new window.Razorpay(options);
+      rzp1.open();
+    } catch (error) {
+      console.error("Payment Failed", error);
+    } finally {
+      setIsProcessing(false);
+    }
+  };
+
   useEffect(() => {
     session?.user?.id && checkUser();
   }, [session]);
@@ -68,6 +105,7 @@ export default function Navbar() {
 
   return (
     <header className="px-5 py-3 max-sm:py-4 border-b border-dashed flex justify-between items-center">
+      <Script src="https://checkout.razorpay.com/v1/checkout.js" />
       <button
         className="cursor-pointer flex justify-start items-center flex-1"
         onClick={reload}
@@ -99,6 +137,7 @@ export default function Navbar() {
                     : "bg-red-500/10 text-red-500 ring-red-500/20 hover:bg-red-500/20"
                 }
               `}
+            disabled={isProcessing}
           >
             <span
               className={`h-1.5 w-1.5 rounded-full animate-pulse ${
@@ -117,7 +156,10 @@ export default function Navbar() {
             </AlertDialogHeader>
             <AlertDialogFooter>
               <AlertDialogCancel>Cancel</AlertDialogCancel>
-              <AlertDialogAction className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]">
+              <AlertDialogAction
+                className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b]"
+                onClick={createOrder}
+              >
                 Continue
               </AlertDialogAction>
             </AlertDialogFooter>
@@ -127,7 +169,7 @@ export default function Navbar() {
         <Button
           className="bg-[#3fcf8e] border-[#34b27b] hover:bg-[#34b27b] max-sm:hidden"
           onClick={logout}
-          disabled={isLoggingOut}
+          disabled={isLoggingOut || isProcessing}
         >
           {isLoggingOut ? "Logging out..." : "Logout"}
         </Button>
