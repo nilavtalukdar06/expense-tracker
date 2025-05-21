@@ -95,6 +95,21 @@ export default function Navbar() {
     }
   };
 
+  const premiumMember = async () => {
+    try {
+      const { error } = await supabase
+        .from("users")
+        .update({ is_member: true })
+        .eq("user_id", session?.user?.id);
+      if (error) {
+        throw new Error(error.message);
+      }
+    } catch (error) {
+      console.error(error);
+      toast.error("Couldn't upgrade you to a premium member");
+    }
+  };
+
   useEffect(() => {
     session?.user?.id && checkUser();
   }, [session]);
