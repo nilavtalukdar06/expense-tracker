@@ -151,7 +151,7 @@ export default function Navbar() {
                     : "bg-red-500/10 text-red-500 ring-red-500/20 hover:bg-red-500/20"
                 }
               `}
-            disabled={isProcessing}
+            disabled={isProcessing || isMember}
           >
             <span
               className={`h-1.5 w-1.5 rounded-full animate-pulse ${
